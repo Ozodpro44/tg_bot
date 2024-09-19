@@ -1,0 +1,33 @@
+version: '3'
+services:
+  bot-service:
+    build: ./telegram-bot
+    environment:
+      - BOT_TOKEN=your_bot_token
+    depends_on:
+      - order-service
+    ports:
+      - "8080:8080"
+
+  order-service:
+    build: ./order-service
+    depends_on:
+      - db-service
+    ports:
+      - "50051:50051"
+
+  db-service:
+    build: ./db-service
+    depends_on:
+      - postgres
+    ports:
+      - "50052:50052"
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: orders
+    ports:
+      - "5432:5432"
